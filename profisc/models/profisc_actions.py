@@ -124,7 +124,6 @@ class profisc_actions(models.Model):
         current_time = datetime.now().strftime("%H:%M:%S")
         _logger.info("Tcr Code:: " + record.profisc_tcr_code)
         _logger.info("BU Code:: " + record.profisc_bu_code)
-        company = self.env.company
         invoice_json = {
             "invoiceId": record.name,
             'tcr': record.profisc_tcr_code if record.profisc_tcr_code else record.company_id.default_tcr,
@@ -136,7 +135,7 @@ class profisc_actions(models.Model):
             'currency': record.currency_id.name,
             'exchangeRate': record.amount_total_signed / record.amount_total_in_currency_signed if record.currency_id != record.company_currency_id else 1.00,
             'sendEInv': int(record.profisc_cis_type) == 1,  # = Fiscalization OR No Fiscalization
-            'taxScheme': company.tax_type,
+            'taxScheme': "fre",
             'paymentTerm': record.invoice_payment_term_id.profisc_payment_code,
             'bankorCash': record.invoice_payment_term_id.profisc_payment_code_description,
             'profileId': record.profisc_profile_id,
@@ -225,7 +224,7 @@ class profisc_actions(models.Model):
                 'price': item_price,
                 "discount":  item_price * line.quantity * (line.discount / 100.0) * coef,
                 "vat": tax.amount,
-                "vatScheme": tax.description,
+                "vatScheme": "fre",
                 "totalLineNeto": coef * total_line_neto,
                 "totalLineVat": coef * total_line_vat
             }
@@ -274,7 +273,7 @@ class profisc_actions(models.Model):
             "company": company.profisc_company_id
         }
         # raise UserError(f"payload::{payload}")
-        return self.getFile(record, payload, "fisc_invoice_pdf")
+        return self.getFile(record, payload, "fisc_invoice_pdf", account_move_id)
 
     def getEinvoicePdf(self, account_move_id):
         company = self.env['profisc.auth'].get_current_company()
@@ -298,22 +297,22 @@ class profisc_actions(models.Model):
             "username": self.env.user.name,
             "company": company.profisc_company_id
         }
-        self.getFile(record, payload, "e_invoice_pdf")
+        self.getFile(record, payload, "e_invoice_pdf", account_move_id)
         # raise UserError(json.dumps(payload))
 
-    def getFile(self, record, payload, invoice_type):
+    def getFile(self, record, payload, invoice_type, account_move_id):
         company = self.env['profisc.auth'].get_current_company()
         response = requests.post(f"{company.profisc_api_endpoint}{company.profisc_search_endpoint}",
                                  data=json.dumps(payload),
                                  headers=self.env['profisc.auth'].generateHeaders())
-        res = response.json()
         if response.status_code in (401, 403):
             self.env['profisc.auth'].profisc_login()
             if invoice_type == 'e_invoice_pdf':
-                self.getEinvoicePdf()
+                self.getEinvoicePdf(account_move_id)
             else:
-                self.getFiscPdf()
+                self.getFiscPdf(account_move_id)
         elif response.status_code == 200:
+            res = response.json()
             if res['status'] and res['error'] is None and len(res['content']) > 0:
                 content = res['content'][0]
                 if invoice_type == 'e_invoice_pdf':
