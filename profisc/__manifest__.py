@@ -54,6 +54,7 @@
             'profisc/static/src/js/profisc_custom_receipt.js',
             'profisc/static/src/js/base.js',
             'profisc/static/src/xml/order_replace.xml',
+            'profisc/static/src/js/printer_no_copies.js'
         ],
     },
     'license': 'LGPL-3',
