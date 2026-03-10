@@ -22,6 +22,7 @@ odoo.define('profisc.ActionpadWidgetScreen', function (require) {
 
         }
 
+
         setProfiscType(type = "0") {
             const order = this.env.pos.get_order();
             if (order) {
