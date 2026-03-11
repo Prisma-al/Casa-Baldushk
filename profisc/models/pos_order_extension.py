@@ -308,7 +308,7 @@ class PosOrder(models.Model):
             'currency': "ALL",
             'exchangeRate': 1,
             'sendEInv': int(record.profisc_fisc_type) == 2,
-            'taxScheme': "fre",
+            'taxScheme': "vat",
             'profileId': 'P1' if not ref_order else 'P10',
             'noteToCustomer': "",
             'customer': {

@@ -135,7 +135,7 @@ class profisc_actions(models.Model):
             'currency': record.currency_id.name,
             'exchangeRate': record.amount_total_signed / record.amount_total_in_currency_signed if record.currency_id != record.company_currency_id else 1.00,
             'sendEInv': int(record.profisc_cis_type) == 1,  # = Fiscalization OR No Fiscalization
-            'taxScheme': "fre",
+            'taxScheme': "vat",
             'paymentTerm': record.invoice_payment_term_id.profisc_payment_code,
             'bankorCash': record.invoice_payment_term_id.profisc_payment_code_description,
             'profileId': record.profisc_profile_id,
