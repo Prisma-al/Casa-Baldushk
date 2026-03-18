@@ -90,7 +90,7 @@
                 <xpath expr="//sheet/group" position="after">
 
                     <hr/>
-                    <button name="send_to_profisc" type="object" class="btn btn-odoo"
+                    <button name="send_to_profisc" type="object" class="btn-primary"
                             groups="account.group_account_invoice"
                             invisible="profisc_isFiscalized == True or state != 'posted' or profisc_fisc_status_sale == 'Y'">
                         <i class="fa fa-bolt" style="color:white"/>
