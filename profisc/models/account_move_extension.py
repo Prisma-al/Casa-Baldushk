@@ -49,6 +49,7 @@ class AccountMoveExtension(models.Model):
     profisc_currency_rate = fields.Char(compute='_generate_rate', string='Kursi ne CIS', default=1.00)
     amount_total_unsigned = fields.Monetary(string='Total (TVSH Included)', store=True, readonly=True, compute='_compute_amount_total_unsigned', currency_field='company_currency_id')
 
+
     journal_id = fields.Many2one(
         'account.journal',
         string='Journal',
