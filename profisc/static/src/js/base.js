@@ -54,6 +54,8 @@ patch(ActionpadWidget.prototype, {
                     lines,
                 };
 
+                console.log("Kitchen Display lines that will be printed:", orderData);
+
                 this.bus_service.send("pos_preparation_display.order", orderData);
                 unsentOrderLines.forEach(line => {
                     line.kitchen_sent = true;
