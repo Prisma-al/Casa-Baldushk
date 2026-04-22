@@ -25,17 +25,21 @@ patch(ActionpadWidget.prototype, {
                 await this.pos.sendOrderInPreparationUpdateLastChange(order);
 
                 const orderLines = order.get_orderlines?.() || [];
-                const lines = orderLines
+                const unsentOrderLines = orderLines.filter(line =>
+                    !line.kitchen_sent &&
+                    line.product_id?.id != null &&
+                    Number(line.qty || 0) > 0
+                );
+                const lines = unsentOrderLines
                     .map(line => ({
                         product_id: line.product_id?.id || null,
                         qty: Number(line.qty || 0),
                         note: String(line.note || ""),
                         name: String(line.full_product_name || line.product_id?.display_name || ""),
-                    }))
-                    .filter(l => l.product_id !== null && l.qty > 0);
+                    }));
 
                 if (!lines.length) {
-                    console.warn("No valid order lines to send to Kitchen Display");
+                    console.warn("No new order lines to send to Kitchen Display");
                     return;
                 }
 
@@ -51,6 +55,9 @@ patch(ActionpadWidget.prototype, {
                 };
 
                 this.bus_service.send("pos_preparation_display.order", orderData);
+                unsentOrderLines.forEach(line => {
+                    line.kitchen_sent = true;
+                });
 
                 console.log("Order sent to Kitchen Display successfully (skipping fiscalization)");
                 // Keep is_draft = true to prevent fiscalization during auto-sync
