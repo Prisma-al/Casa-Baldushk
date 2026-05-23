@@ -298,6 +298,8 @@ class PosOrder(models.Model):
                 ref_order = None
 
         current_time = datetime.now().strftime("%H:%M:%S")
+        current_company = self.env.company
+
 
         invoice_json = {
             "invoiceId": record.access_token,
@@ -308,7 +310,7 @@ class PosOrder(models.Model):
             'currency': "ALL",
             'exchangeRate': 1,
             'sendEInv': int(record.profisc_fisc_type) == 2,
-            'taxScheme': "fre",
+            'taxScheme': "normal" if current_company.profisc_is_in_vat else "fre",
             'profileId': 'P1' if not ref_order else 'P10',
             'noteToCustomer': "",
             'customer': {
@@ -401,7 +403,7 @@ class PosOrder(models.Model):
                 'price': item_price,
                 "discount": line.discount,  #
                 "vat": tax.amount,
-                "vatScheme": "fre",
+                "vatScheme": "normal" if current_company.profisc_is_in_vat else "fre",
                 "totalLineNeto": coef * total_line_neto,
                 "totalLineVat": coef * total_line_vat
             }

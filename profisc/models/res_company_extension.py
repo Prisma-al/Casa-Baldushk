@@ -19,6 +19,8 @@ class ResCompanyExtension(models.Model):
     profisc_invoiceStatus = fields.Char("Status Change Api", default="/endpoint/v2/changePurchaseInvoicesStatusInGroup")
     profisc_checkStatus = fields.Char("Check Status Api", default="/apiEndpoint/search")
     profisc_auto_search_nuis = fields.Boolean(string='Auto Search NUIS', default=False)
+    profisc_is_in_vat = fields.Boolean(string="Is in Vat", default=False)
+
 
     profisc_api_endpoint = fields.Selection([
         ('https://demoapi.profisc.al', 'demo'),
