@@ -38,6 +38,11 @@
                                         <span class="fw-bold" t-esc="product.qty"/> x
                                     </t>
                                     <span t-esc="product.name"/>
+                                    <t t-if="product.note">
+                                        <div class="product-note" style="font-size: 26px; font-weight: 700; margin-left: 28px;">
+                                            Note: <t t-esc="product.note"/>
+                                        </div>
+                                    </t>
                                 </div>
                             </t>
                         </div>

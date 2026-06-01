@@ -6,22 +6,16 @@ console.log("📦 POS OrderChangeReceipt Patch Loaded!");
 
 patch(PosStore.prototype, {
     getPrintingChanges(order, diningModeUpdate) {
-        console.log("🧾 getPrintingChanges called! Order:", order, "Dining Update:", diningModeUpdate);
-
-        const categoryMap = {}; // ✅ Use this to group products by category
+        const categoryMap = {};
 
         if (order && order.get_orderlines) {
             const orderlines = order.get_orderlines();
-            console.log("🛒 Products in this order:");
 
             orderlines.forEach((line, index) => {
                 const product = line.product_id || line.product;
                 const productName = line.full_product_name || line.get_full_product_name();
                 const categoryName = product?.pos_categ_ids?.[0]?.name || "Uncategorized";
 
-                console.log("Produkti-> ", product);
-
-                // ✅ Group products by category
                 if (!categoryMap[categoryName]) {
                     categoryMap[categoryName] = [];
                 }
@@ -30,18 +24,10 @@ patch(PosStore.prototype, {
                     name: productName,
                     qty: line.get_quantity(),
                     price: line.get_display_price(),
+                    note: line.customer_note || line.note || line.get_customer_note?.() || "",
                 });
 
-                console.log(`Product ${index + 1}:`, {
-                    name: productName,
-                    qty: line.get_quantity(),
-                    price: line.price,
-                    total: line.get_display_price(),
-                    category: categoryName,
-                });
             });
-        } else {
-            console.log("⚠️ No order lines found for this order.");
         }
 
         const printingData = {
@@ -54,7 +40,7 @@ patch(PosStore.prototype, {
             diningModeUpdate: diningModeUpdate || [],
             order_number: order?.pos_reference || order?.name || "",
             changes: order?.get_change ? order.get_change() : 0,
-            categories_with_products: categoryMap // ✅ Grouped data
+            categories_with_products: categoryMap
         };
 
         console.log("🧾 Receipt render env (printingData):", printingData);
