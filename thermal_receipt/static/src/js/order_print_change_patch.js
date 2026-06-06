@@ -22,14 +22,10 @@ patch(PosStore.prototype, {
     },
 
     getPrintingChanges(order, diningModeUpdate) {
-        console.log("🧾 getPrintingChanges called! Order:", order, "Dining Update:", diningModeUpdate);
-
-        const categoryMap = {}; // ✅ Use this to group products by category
+        const categoryMap = {};
 
         const orderlines = this.thermalReceiptChangedLines || [];
         if (orderlines.length) {
-            console.log("🛒 Products in this print change:");
-
             orderlines.forEach((line, index) => {
                 const product =
                     typeof line.product_id === "object"
@@ -46,9 +42,7 @@ patch(PosStore.prototype, {
                 const quantity = line.quantity ?? line.get_quantity?.() ?? 0;
                 const categoryName = category?.name || "Uncategorized";
 
-                console.log("Produkti-> ", product);
 
-                // ✅ Group products by category
                 if (!categoryMap[categoryName]) {
                     categoryMap[categoryName] = [];
                 }
@@ -57,18 +51,10 @@ patch(PosStore.prototype, {
                     name: productName,
                     qty: quantity,
                     price: line.get_display_price?.() || line.price || 0,
+                    note: line.customer_note || line.note || line.get_customer_note?.() || "",
                 });
 
-                console.log(`Product ${index + 1}:`, {
-                    name: productName,
-                    qty: quantity,
-                    price: line.price,
-                    total: line.get_display_price?.(),
-                    category: categoryName,
-                });
             });
-        } else {
-            console.log("⚠️ No changed order lines found for this receipt.");
         }
 
         const printingData = {
@@ -81,10 +67,10 @@ patch(PosStore.prototype, {
             diningModeUpdate: diningModeUpdate || [],
             order_number: order?.pos_reference || order?.name || "",
             changes: order?.get_change ? order.get_change() : 0,
-            categories_with_products: categoryMap // ✅ Grouped data
+            categories_with_products: categoryMap
         };
 
-        console.log("🧾 Receipt render env (printingData):", printingData);
+        console.log("Receipt render env (printingData):", printingData);
         return printingData;
     },
 });
