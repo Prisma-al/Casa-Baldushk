@@ -14,6 +14,8 @@ db_filter_org = http.db_filter
 
 def db_filter(dbs, host=None):
     dbs = db_filter_org(dbs, host)
+    if not http.request:
+        return dbs
     httprequest = http.request.httprequest
     db_filter_hdr = httprequest.environ.get("HTTP_X_ODOO_DBFILTER")
     if db_filter_hdr:
@@ -21,8 +23,8 @@ def db_filter(dbs, host=None):
     return dbs
 
 
-if config.get("proxy_mode") and "dbfilter_from_header" in config.get(
-    "server_wide_modules"
+if config.get("proxy_mode") and "dbfilter_from_header" in (
+    config.get("server_wide_modules") or []
 ):
     _logger = logging.getLogger(__name__)
     _logger.info("monkey patching http.db_filter")
