@@ -15,6 +15,7 @@ patch(receiptLineGrouper, {
     },
 });
 
+
 // The receipt template is rendered with `data` only, so the table number has to
 // be put there explicitly.
 patch(PosStore.prototype, {
