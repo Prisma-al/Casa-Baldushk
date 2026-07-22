@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="profisc_custom_changes_casa.PaymentScreenValidate"
+       t-inherit="point_of_sale.PaymentScreenValidate" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('validation-button')]" position="before">
+            <button class="button next validation btn btn-lg py-3 lh-lg draft-button"
+                    style="background-color: #875A7B; color: white;"
+                    t-on-click="() => this.onClickDraft()">
+                <span class="next_text">Draft</span>
+            </button>
+        </xpath>
+    </t>
+
+</templates>
