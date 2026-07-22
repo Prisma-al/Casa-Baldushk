@@ -2,8 +2,7 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, {
-    async onClickDraft() {
-        this.currentOrder.is_draft = true;
-        await this.validateOrder(false);
+    onClickDraft() {
+        console.log("Draft button clicked");
     },
 });
