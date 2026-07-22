@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
+
+    <!-- Add a visible "Draft" button next to the "Valido" (Validate) button.
+         All the behaviour already lives in the base `profisc` module: its
+         PaymentScreen patch defines `onClickDraft` / `draftOrder`, which validate
+         the order with `sent_fiscal = false` so profisc skips fiscalization.
+         Here we only render the button and wire it to that existing method. -->
     <t t-name="profisc_custom_changes_casa.PaymentScreenValidate"
        t-inherit="point_of_sale.PaymentScreenValidate" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('validation-button')]" position="before">
-            <button class="button next validation btn btn-lg py-3 lh-lg draft-button"
+            <button class="button next btn btn-lg py-3 lh-lg draft-button"
                     style="background-color: #875A7B; color: white;"
                     t-on-click="() => this.onClickDraft()">
                 <span class="next_text">Draft</span>

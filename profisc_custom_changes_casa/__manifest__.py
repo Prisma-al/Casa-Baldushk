@@ -10,7 +10,6 @@
     ],
     "assets" : {
         "point_of_sale._assets_pos" : [
-            "profisc_custom_changes_casa/static/src/js/payment_screen_draft.js",
             "profisc_custom_changes_casa/static/src/xml/PaymentScreenButton.xml",
         ],
     },
