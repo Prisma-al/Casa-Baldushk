@@ -10,7 +10,7 @@ class PosOrder(models.Model):
     def _load_pos_data_fields(self, config_id):
         fields_list = super()._load_pos_data_fields(config_id)
         if "is_draft" not in fields_list:
-            fields_list.append("is_draft")
+            fields_list['is_draft'] = 'is_draft'
         return fields_list
 
     def _process_order(self, order, existing_order):
