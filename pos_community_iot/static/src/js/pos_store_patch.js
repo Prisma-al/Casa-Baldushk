@@ -6,9 +6,11 @@ import { CommunityIotPrinter } from "@pos_community_iot/js/community_iot_printer
  * Two separate hooks, because Odoo prints kitchen tickets and customer receipts
  * through different objects:
  *
- *   create_printer()         -> one printer per pos.printer record (kitchen).
+ *   createPrinter()          -> one printer per pos.printer record (kitchen).
  *                               Core handles category routing and the Order
  *                               button from there.
+ *                               NOTE: camelCase. Odoo 18 called this
+ *                               create_printer; it was renamed in 19.
  *   afterProcessServerData() -> hardwareProxy.printer, which is what
  *                               PosPrinterService.print() uses for the customer
  *                               receipt ("Print Receipt"). Same place core
@@ -16,9 +18,9 @@ import { CommunityIotPrinter } from "@pos_community_iot/js/community_iot_printer
  */
 patch(PosStore.prototype, {
     /** Kitchen / order printers. */
-    create_printer(config) {
+    createPrinter(config) {
         if (config.printer_type !== "community_iot") {
-            return super.create_printer(...arguments);
+            return super.createPrinter(...arguments);
         }
         return new CommunityIotPrinter({
             queueJob: (image) =>
