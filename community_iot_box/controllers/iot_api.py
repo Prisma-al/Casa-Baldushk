@@ -383,7 +383,17 @@ class CommunityIotApiController(http.Controller):
             )
 
             if jobs:
-                jobs.write({"state": "processing"})
+                # Stamped per record so _cron_requeue_stale_jobs can tell how
+                # long a job has been claimed and how many attempts it has had.
+                claimed_at = fields.Datetime.now()
+                for job in jobs:
+                    job.write(
+                        {
+                            "state": "processing",
+                            "polled_at": claimed_at,
+                            "poll_count": (job.poll_count or 0) + 1,
+                        }
+                    )
 
             data_jobs = []
             for job in jobs:

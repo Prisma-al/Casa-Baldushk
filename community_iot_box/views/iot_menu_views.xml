@@ -295,6 +295,8 @@
                 <field name="state"/>
                 <field name="result_status"/>
                 <field name="result_message"/>
+                <field name="polled_at" optional="hide"/>
+                <field name="poll_count" optional="hide"/>
                 <field name="processed_at"/>
             </list>
         </field>
@@ -319,6 +321,8 @@
                             <field name="state"/>
                             <field name="result_status"/>
                             <field name="result_message"/>
+                            <field name="polled_at" readonly="1"/>
+                            <field name="poll_count" readonly="1"/>
                             <field name="processed_at"/>
                             <field name="error_code"/>
                         </group>

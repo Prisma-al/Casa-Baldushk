@@ -1,6 +1,15 @@
+import logging
 import secrets
 
+from datetime import timedelta
+
 from odoo import api, fields, models
+
+
+_logger = logging.getLogger(__name__)
+
+# Fallback used when the matching ir.config_parameter is missing.
+DEFAULT_OFFLINE_TIMEOUT_SECONDS = 120
 
 
 class CommunityIotBox(models.Model):
@@ -126,6 +135,47 @@ class CommunityIotBox(models.Model):
     def _increment_config_version(self):
         for box in self.sudo():
             box.write({"config_version": (box.config_version or 0) + 1})
+
+    @api.model
+    def _get_offline_timeout_seconds(self):
+        value = self.env["ir.config_parameter"].sudo().get_param(
+            "community_iot_box.box_offline_timeout_seconds"
+        )
+        try:
+            timeout = int(value)
+        except (TypeError, ValueError):
+            return DEFAULT_OFFLINE_TIMEOUT_SECONDS
+        return timeout if timeout > 0 else DEFAULT_OFFLINE_TIMEOUT_SECONDS
+
+    @api.model
+    def _cron_mark_offline(self):
+        """Flip boxes to 'offline' once their heartbeat goes quiet.
+
+        Nothing else in the module ever writes the 'offline' state: /register and
+        /heartbeat only ever set 'online' or 'error'. Without this, a box whose
+        agent died keeps reporting Online forever, so an operator has no way to
+        tell a working printer from a dead one.
+        """
+        timeout = self._get_offline_timeout_seconds()
+        cutoff = fields.Datetime.now() - timedelta(seconds=timeout)
+
+        stale = self.search(
+            [
+                ("state", "in", ("online", "error")),
+                ("last_seen", "!=", False),
+                ("last_seen", "<", cutoff),
+            ]
+        )
+        if not stale:
+            return
+
+        stale.write({"state": "offline"})
+        _logger.info(
+            "IoT: marked %s box(es) offline after %ss without a heartbeat: %s",
+            len(stale),
+            timeout,
+            ", ".join(stale.mapped("name")),
+        )
 
     def action_open_devices(self):
         self.ensure_one()

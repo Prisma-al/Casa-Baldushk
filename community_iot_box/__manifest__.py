@@ -28,6 +28,7 @@ and drive the actual hardware.
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/ir_cron_data.xml",
         "views/iot_menu_views.xml",
     ],
     "assets": {
