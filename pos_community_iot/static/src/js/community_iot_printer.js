@@ -1,4 +1,5 @@
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * Prints POS tickets by queueing them as community_iot_box jobs.
@@ -51,9 +52,15 @@ export class CommunityIotPrinter extends EpsonPrinter {
             return { result: Boolean(result && result.job_id) };
         } catch (error) {
             // Returning false makes BasePrinter surface the failure to the
-            // cashier rather than silently dropping the ticket.
+            // cashier rather than silently dropping the ticket. Pass the server
+            // message through so the popup says what is actually wrong.
             console.error("Community IoT: could not queue print job", error);
-            return { result: false, printerErrorCode: "QUEUE_FAILED" };
+            return {
+                result: false,
+                printerErrorCode: "QUEUE_FAILED",
+                errorMessage:
+                    error?.data?.message || error?.message || String(error || ""),
+            };
         }
     }
 
@@ -63,6 +70,45 @@ export class CommunityIotPrinter extends EpsonPrinter {
      */
     openCashbox() {
         console.warn("Community IoT: openCashbox is not implemented");
+    }
+
+    /**
+     * @override
+     * EpsonPrinter's version decodes ePOS error codes and talks about printer
+     * certificates and Epson Server Direct Print. None of that applies here -
+     * we only ever fail to *queue* a job - so say what actually went wrong.
+     */
+    getResultsError(printResult) {
+        return {
+            successful: false,
+            errorCode: printResult?.printerErrorCode || "QUEUE_FAILED",
+            message: {
+                title: _t("Printing failed"),
+                body:
+                    printResult?.errorMessage ||
+                    _t(
+                        "Odoo could not queue the print job. Check that this printer " +
+                            "has an IoT Device set, and that the device belongs to an " +
+                            "active IoT Box."
+                    ),
+            },
+            canRetry: true,
+        };
+    }
+
+    /**
+     * @override
+     * Inherited version references this.url, which we never set.
+     */
+    getActionError() {
+        return {
+            successful: false,
+            message: {
+                title: _t("Printing failed"),
+                body: _t("Could not reach Odoo to queue the print job."),
+            },
+            canRetry: true,
+        };
     }
 }
 
