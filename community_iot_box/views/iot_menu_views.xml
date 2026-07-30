@@ -132,13 +132,17 @@
                         <group>
                             <field name="hostname"/>
                             <field name="box_uid"/>
-                            <field name="token" readonly="1"/>
-                            <button
-                                name="action_generate_token"
-                                string="Generate Token"
-                                type="object"
-                                class="btn-secondary"
-                            />
+                            <label for="token"/>
+                            <div class="o_row">
+                                <field name="token" readonly="1" class="text-truncate"/>
+                                <button
+                                    name="action_generate_token"
+                                    string="Generate"
+                                    type="object"
+                                    class="btn-link"
+                                    icon="fa-refresh"
+                                />
+                            </div>
                             <field name="state"/>
                             <field name="last_seen"/>
                             <field name="config_version" readonly="1"/>
