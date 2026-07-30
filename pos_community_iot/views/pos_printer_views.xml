@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_printer_form_community_iot" model="ir.ui.view">
+        <field name="name">pos.printer.form.community.iot</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
+        <field name="arch" type="xml">
+            <field name="printer_type" position="after">
+                <field name="iot_device_id"
+                       invisible="printer_type != 'community_iot'"
+                       required="printer_type == 'community_iot'"
+                       options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

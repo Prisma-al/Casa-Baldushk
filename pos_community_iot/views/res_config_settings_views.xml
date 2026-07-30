@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_community_iot" model="ir.ui.view">
+        <field name="name">res.config.settings.form.community.iot</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Sits next to the ePos Printer setting, which is the equivalent
+                 option for Epson hardware. -->
+            <xpath expr="//setting[@id='pos_other_devices']" position="after">
+                <setting id="pos_community_iot_receipt"
+                         string="Community IoT Receipt Printer"
+                         help="Print customer receipts through the Community IoT agent instead of the browser print dialog.">
+                    <field name="pos_community_iot_receipt_device_id"
+                           options="{'no_create': True}"/>
+                    <div class="row" invisible="not pos_community_iot_receipt_device_id">
+                        <label for="pos_community_iot_receipt_copies"
+                               class="col-lg-4 o_light_label"/>
+                        <field name="pos_community_iot_receipt_copies"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
