@@ -34,12 +34,13 @@ class PosConfig(models.Model):
         help="How many copies of each customer receipt to print.",
     )
 
-    @api.model
-    def _load_pos_data_fields(self, config):
-        return super()._load_pos_data_fields(config) + [
-            "community_iot_receipt_device_id",
-            "community_iot_receipt_copies",
-        ]
+    # NOTE: deliberately no _load_pos_data_fields override here.
+    # pos.load.mixin returns [], and read([]) means "all fields", so pos.config
+    # ships every field to the POS already - including the two added above.
+    # Overriding it to return a short list would restrict the load and break
+    # core, which reads e.g. record['use_pricelist'] in _load_pos_data_read.
+    # pos.printer is different: it returns an explicit field list, so there the
+    # override is required.
 
     @api.constrains("community_iot_receipt_copies")
     def _check_community_iot_receipt_copies(self):
