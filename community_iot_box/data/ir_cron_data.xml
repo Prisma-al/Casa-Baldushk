@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    noupdate="1" so that tuning done from the UI (interval, active flag,
+    thresholds) is not reset on every module upgrade.
+-->
+<odoo noupdate="1">
+
+    <!--
+        How long a job may sit in 'processing' before an agent is presumed dead
+        and the job is requeued. Generous on purpose: requeuing too eagerly can
+        reprint a ticket the agent actually did print but failed to report.
+    -->
+    <record id="param_job_processing_timeout_minutes" model="ir.config_parameter">
+        <field name="key">community_iot_box.job_processing_timeout_minutes</field>
+        <field name="value">5</field>
+    </record>
+
+    <!--
+        How many times a single job may be claimed before it is abandoned as an
+        error. Stops a job that kills the agent mid-print from cycling forever.
+    -->
+    <record id="param_job_max_poll_attempts" model="ir.config_parameter">
+        <field name="key">community_iot_box.job_max_poll_attempts</field>
+        <field name="value">3</field>
+    </record>
+
+    <!--
+        Seconds without a heartbeat before a box is considered offline. The agent
+        is expected to heartbeat far more often than this.
+    -->
+    <record id="param_box_offline_timeout_seconds" model="ir.config_parameter">
+        <field name="key">community_iot_box.box_offline_timeout_seconds</field>
+        <field name="value">120</field>
+    </record>
+
+    <record id="ir_cron_iot_requeue_stale_jobs" model="ir.cron">
+        <field name="name">IoT: Requeue stale print jobs</field>
+        <field name="model_id" ref="model_community_iot_box_iot_job"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_requeue_stale_jobs()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">minutes</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_iot_mark_boxes_offline" model="ir.cron">
+        <field name="name">IoT: Mark boxes offline</field>
+        <field name="model_id" ref="model_community_iot_box_iot_box"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_mark_offline()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>
