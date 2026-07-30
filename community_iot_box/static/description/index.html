@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>IoT Box Community</title>
+</head>
+<body>
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <div class="oe_span12" style="text-align:center;">
+                <h1 class="oe_slogan" style="font-size:42px; margin-bottom:8px;">IoT Box Community</h1>
+                <h2 class="oe_slogan" style="font-size:24px; color:#6f42c1; margin-top:0;">
+                    Community IoT backend for Odoo 17 by JDA Solutions
+                </h2>
+                <img
+                    src="images/jda-solutions-logo.png"
+                    alt="JDA SOLUTIONS"
+                    style="width:112px; height:auto; margin:6px 0 12px;"
+                />
+                <p style="font-size:18px; max-width:900px; margin:16px auto 24px auto; line-height:1.6;">
+                    Manage IoT boxes, devices and print jobs in Odoo 17 Community using an external
+                    Python agent running on Windows or Linux.
+                </p>
+                <img
+                    src="images/main_screenshot.png"
+                    alt="IoT Box Community cover"
+                    style="width:100%; max-width:960px; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.12);"
+                />
+            </div>
+        </div>
+    </section>
+
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <div class="oe_span6">
+                <h3 style="font-size:26px;">Main features</h3>
+                <ul style="font-size:16px; line-height:1.8;">
+                    <li>IoT Box records with secure token-based authentication</li>
+                    <li>IoT Devices for ticket, standard, label and drawer scenarios</li>
+                    <li>IoT Jobs queue with processing status and result tracking</li>
+                    <li>Heartbeat monitoring with online/offline visibility</li>
+                    <li>Device autodiscovery sync from the external IoT agent</li>
+                    <li>Test print flow for standard and ticket printers</li>
+                </ul>
+            </div>
+            <div class="oe_span6">
+                <h3 style="font-size:26px;">Supported workflow</h3>
+                <ul style="font-size:16px; line-height:1.8;">
+                    <li>Create an IoT Box in Odoo and generate its IoT token</li>
+                    <li>Install the external IoT agent on a Windows or Linux machine</li>
+                    <li>Configure Odoo URL, optional DB name and token</li>
+                    <li>Auto-detect local printers and sync them to Odoo</li>
+                    <li>Launch connection tests and print test pages from Odoo</li>
+                    <li>Process real operational print jobs through the agent</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <div class="oe_span12">
+                <h3 style="font-size:26px; text-align:center;">REST API endpoints</h3>
+                <div style="max-width:860px; margin:0 auto; font-size:16px; line-height:1.9;">
+                    <p><strong>/iot/api/v1/register</strong> - Agent registration</p>
+                    <p><strong>/iot/api/v1/heartbeat</strong> - Box heartbeat and online status</p>
+                    <p><strong>/iot/api/v1/jobs/poll</strong> - Job polling</p>
+                    <p><strong>/iot/api/v1/jobs/result</strong> - Job result reporting</p>
+                    <p><strong>/iot/api/v1/config</strong> - Configuration fetch</p>
+                    <p><strong>/iot/api/v1/devices/sync</strong> - Automatic device synchronization</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <div class="oe_span12" style="text-align:center;">
+                <h3 style="font-size:26px;">Important note</h3>
+                <p style="font-size:16px; max-width:900px; margin:0 auto; line-height:1.8;">
+                    This repository contains the Odoo module only. The external IoT agent is deployed separately
+                    and communicates with Odoo through outgoing HTTP requests.
+                </p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
