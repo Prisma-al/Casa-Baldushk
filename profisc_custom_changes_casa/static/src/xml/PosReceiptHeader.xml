@@ -6,8 +6,8 @@
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
             <div class="pos-receipt-table-no">
                 <strong>Table NO: </strong>
-                <t t-if="order.table_name">
-                    <t t-esc="order.table_name"/>
+                <t t-if="order.table_no">
+                    <t t-esc="order.table_no"/>
                 </t>
             </div>
         </xpath>

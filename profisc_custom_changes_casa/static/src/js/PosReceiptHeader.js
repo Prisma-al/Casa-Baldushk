@@ -8,11 +8,11 @@ patch(PosOrder.prototype,{
 
         // shtojme table name meqe lidhet direkt me orderin
         if (this.table_id){
-            result.table_name = this.table_id.name;
+            result.table_no = this.table_id.table_number;
         }
         // nese param se ka table_id
         else if(this.table) {
-            result.table_name = this.table.name;
+            result.table_no = this.table.table_number;
         }
 
         return result;
