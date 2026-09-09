@@ -21,10 +21,24 @@
             </div>
         </xpath>
 
-        <!-- Enlarge the category headers produced by the grouped rendering. -->
+
         <xpath expr="//div[@t-esc='group.name']" position="attributes">
+            <attribute name="t-if">group.name</attribute>
             <attribute name="class">text-uppercase pb-2 mb-3</attribute>
-            <attribute name="style">font-size: 42px; font-weight: 900; letter-spacing: 2px; border-bottom: 2px solid black;</attribute>
+            <attribute name="style">font-size: 36px; font-weight: 900; letter-spacing: 2px; border-bottom: 2px solid black;</attribute>
+        </xpath>
+
+        <!-- Printojm kategorut brenda cdo course -->
+        <xpath expr="//div[@t-foreach='group.data']" position="replace">
+            <t t-foreach="group.subGroups" t-as="subGroup" t-key="subGroup_index">
+                <div t-if="subGroup.name" class="text-uppercase mt-2 mb-2 pb-1"
+                     style="font-size: 30px; font-weight: 800; letter-spacing: 1px; border-bottom: 1px dashed black;">
+                    <t t-esc="subGroup.name"/>
+                </div>
+                <div t-foreach="subGroup.data" t-as="line" class="ps-2" t-key="line_index">
+                    <t t-call="point_of_sale.OrderChangeReceiptLine"/>
+                </div>
+            </t>
         </xpath>
 
     </t>
@@ -35,13 +49,6 @@
              relative sizing and stay readable. -->
         <xpath expr="//div[starts-with(@t-attf-class, 'orderline')]" position="attributes">
             <attribute name="style">font-size: 32px; font-weight: 600;</attribute>
-        </xpath>
-
-
-        <xpath expr="//div[hasclass('medium')]" position="after">
-            <div t-if="line.group?.course" class="fst-italic" style="font-size: 60%;">
-                <t t-esc="line.group.course"/>
-            </div>
         </xpath>
 
     </t>

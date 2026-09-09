@@ -4,20 +4,42 @@ import { patch } from "@web/core/utils/patch";
 
 patch(receiptLineGrouper, {
     getGroup(line) {
-        const course =
-            line.config?.module_pos_restaurant && line.course_id ? line.course_id.name : "";
         const category = line.product_id?.pos_categ_ids?.[0];
-        if (!category) {
-            return { ...super.getGroup(line), course };
+        const categoryData = {
+            category: category?.name || "",
+            categoryIndex: category?.sequence ?? 0,
+        };
+        const course = line.config?.module_pos_restaurant ? line.course_id : null;
+        if (!course) {
+            // kur ska course direkt me categ
+            return { index: -1, name: "", ...categoryData };
         }
-        return { index: category.sequence ?? 0, name: category.name, course };
+        return { index: course.index, name: course.name, ...categoryData };
     },
 });
 
 
-// The receipt template is rendered with `data` only, so the table number has to
-// be put there explicitly.
+// Split each course group into category sub groups, sorted by category sequence.
 patch(PosStore.prototype, {
+    async prepareReceiptGroupedData(data) {
+        const result = await super.prepareReceiptGroupedData(data);
+
+        for (const group of result.changes?.groupedData || []) {
+            const subGroups = group.data.reduce((acc, line) => {
+                const { category = "", categoryIndex = 0 } = line.group || {};
+                if (!acc[category]) {
+                    acc[category] = { name: category, index: categoryIndex, data: [] };
+                }
+                acc[category].data.push(line);
+                return acc;
+            }, {});
+            group.subGroups = Object.values(subGroups).sort((a, b) => a.index - b.index);
+        }
+
+        return result;
+    },
+
+
     getOrderData(order, reprint) {
         return {
             ...super.getOrderData(order, reprint),
