@@ -4,11 +4,9 @@
     <t t-name="profisc_custom_changes_casa.ReceiptHeaderChange"
        t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
-            <div class="pos-receipt-table-no">
+            <div class="pos-receipt-table-no" t-if="props.data.table_no">
                 <strong>Table NO: </strong>
-                <t t-if="order.table_no">
-                    <t t-esc="order.table_no"/>
-                </t>
+                <t t-esc="props.data.table_no"/>
             </div>
         </xpath>
     </t>
