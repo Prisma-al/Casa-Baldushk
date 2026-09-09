@@ -37,6 +37,13 @@
             <attribute name="style">font-size: 32px; font-weight: 600;</attribute>
         </xpath>
 
+
+        <xpath expr="//div[hasclass('medium')]" position="after">
+            <div t-if="line.group?.course" class="fst-italic" style="font-size: 60%;">
+                <t t-esc="line.group.course"/>
+            </div>
+        </xpath>
+
     </t>
 
 </templates>
