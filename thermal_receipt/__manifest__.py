@@ -24,11 +24,13 @@ Also adds a thermal HTML invoice report on customer invoices.
         'report/report.xml',
         'report/paperformat.xml',
         'report/report_invoice_thermal_html.xml',
+        'views/pos_category_view.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
             'thermal_receipt/static/src/xml/order_change_receipt_extend.xml',
             'thermal_receipt/static/src/js/order_print_change_patch.js',
+            'thermal_receipt/static/src/js/skip_preparation_category.js',
         ],
     },
 }
