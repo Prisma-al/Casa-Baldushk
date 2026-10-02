@@ -1,11 +1,11 @@
 {
     'name': "Thermal Receipt",
 
-    'summary': "Kitchen preparation receipts grouped by POS category",
+    'summary': "Kitchen preparation receipts in a large thermal-printer font",
 
     'description': """
-Prints the POS preparation ("kitchen") receipt with its lines grouped by POS
-category instead of by course, in a large font suitable for thermal printers.
+Prints the POS preparation ("kitchen") receipt grouped by course, in a large font
+suitable for thermal printers.
 Also adds a thermal HTML invoice report on customer invoices.
     """,
 
@@ -24,11 +24,13 @@ Also adds a thermal HTML invoice report on customer invoices.
         'report/report.xml',
         'report/paperformat.xml',
         'report/report_invoice_thermal_html.xml',
+        'views/pos_category_view.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
             'thermal_receipt/static/src/xml/order_change_receipt_extend.xml',
             'thermal_receipt/static/src/js/order_print_change_patch.js',
+            'thermal_receipt/static/src/js/skip_preparation_category.js',
         ],
     },
 }
