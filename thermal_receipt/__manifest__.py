@@ -1,11 +1,11 @@
 {
     'name': "Thermal Receipt",
 
-    'summary': "Kitchen preparation receipts grouped by POS category",
+    'summary': "Kitchen preparation receipts in a large thermal-printer font",
 
     'description': """
-Prints the POS preparation ("kitchen") receipt with its lines grouped by POS
-category instead of by course, in a large font suitable for thermal printers.
+Prints the POS preparation ("kitchen") receipt grouped by course, in a large font
+suitable for thermal printers.
 Also adds a thermal HTML invoice report on customer invoices.
     """,
 
