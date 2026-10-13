@@ -9,6 +9,7 @@ class PosSessionExt(models.Model):
 
     @api.model
     def _cron_auto_close_sessions(self):
+        _logger.info("POS Auto Close: Cron triggered")
         sessions = self.search([
             ('state', 'in', ('opened', 'closing_control')),
         ])
@@ -42,9 +43,6 @@ class PosSessionExt(models.Model):
     def _auto_close_close(self):
         self.ensure_one()
         _logger.info("auto_close_close -> u trigeruaaaaaaaaaa")
-
-    def _cron_auto_close_sessions(self):
-        _logger.info("cron_auto_close_sessions -> u trigeruaaaaaaaaaa")
 
 
 
