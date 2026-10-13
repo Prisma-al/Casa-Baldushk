@@ -2,7 +2,7 @@
 <odoo noupdate="1">
     <record id="ir_cron_auto_close" model="ir.cron">
         <field name="name">POS: Auto Close</field>
-        <field name="model_id" ref="point_of_sale._pos_session"/>
+        <field name="model_id" ref="point_of_sale.model_pos_session"/>
         <field name="state">code</field>
         <field name="code">model._cron_auto_close_sessions()</field>
         <field name="interval_number">1</field>
