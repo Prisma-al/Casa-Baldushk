@@ -99,6 +99,8 @@ class PosSessionExt(models.Model):
             _logger.info("auto_close_cash_out -> nothing to cash out on %s (%s)", self.name, expected_cash)
             return
 
+        self.sudo().write({'start_at': self.start_at})
+
         self.try_cash_in_out(
             'out',
             expected_cash,
