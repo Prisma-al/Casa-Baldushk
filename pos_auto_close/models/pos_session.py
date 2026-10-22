@@ -1,5 +1,6 @@
 from odoo import models, api, _, fields
 from odoo.exceptions import UserError
+from odoo.tools import formatLang
 import logging
 
 AUTO_CLOSE_DRAFT_NODE = 'pay'
@@ -112,6 +113,8 @@ class PosSessionExt(models.Model):
             False,  # partner_id
             {'translatedType': _('out')},
         )
+        self.message_post(body=_("Automatic cash out: %(amount)s",
+                                 amount=formatLang(self.env, expected_cash, currency_obj=self.currency_id)))
         _logger.info("auto_close_cash_out -> %s %s cashed out from %s",
                      expected_cash, self.currency_id.name, self.name)
 
