@@ -12,27 +12,31 @@ class PosSessionExt(models.Model):
     @api.model
     def _cron_auto_close_sessions(self):
         _logger.info("POS Auto Close: Cron triggered")
-        sessions = self.search([
-            ('state', 'in', ('opened', 'closing_control')),
-        ])
-        _logger.info("POS Auto Close: %s open sessions found", len(sessions))
+        session_ids = self.search([('state', 'in', ('opened', 'closing_control'))]).ids
+        _logger.info("POS Auto Close: %s open sessions found", len(session_ids))
 
-        for session in sessions:
+        # No savepoints: profisc commits inside its own code, which destroys them.
+        # Every step is idempotent, so a failed run is finished by the next one.
+        for session_id in session_ids:
+            session = self.browse(session_id)
             session = session.with_company(session.company_id)
             try:
-                # save point per te mos shku half-way po ose all-in ose 0
-                with self.env.cr.savepoint():
-                    session._auto_close_session()
+                session._auto_close_validate_drafts()
+                session._auto_close_cash_out()
                 self.env.cr.commit()
-                _logger.info("POS Auto Close: Session %s closed", session.id)
-            except Exception:
-                _logger.exception("POS Auto Close: Error closing session %s", session.id)
 
-    def _auto_close_session(self):
-        self.ensure_one()
-        self._auto_close_validate_drafts()
-        self._auto_close_cash_out()
-        self._auto_close_close()
+                session._auto_close_close()
+                self.env.cr.commit()
+                _logger.info("POS Auto Close: Session %s closed", session.name)
+            except Exception:
+                self.env.cr.rollback()   # undo only what wasn't committed yet
+                _logger.exception("POS Auto Close: Error closing session %s", session_id)
+
+    # def _auto_close_session(self):
+    #     self.ensure_one()
+    #     self._auto_close_validate_drafts()
+    #     self._auto_close_cash_out()
+    #     self._auto_close_close()
 
     def _auto_close_validate_drafts(self):
         self.ensure_one()

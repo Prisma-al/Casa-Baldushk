@@ -4,7 +4,7 @@
     "version": "19.0.1.0.0",
     "category": "Point of Sale",
     "author": "Fabio",
-    "depends": ["point_of_sale"],
+    "depends": ["point_of_sale", "profisc"],
     "data": [
         "data/ir_cron.xml"
     ],
